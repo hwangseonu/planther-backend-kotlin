@@ -29,7 +29,7 @@ data class User(
 
         @Column(nullable = false)
         @JsonIgnore
-        val roles: ArrayList<String>) {
+        val roles: String) {
 
     public fun getStudentId(): String {
         return String.format("%d%02d%02d", grade, cls, number)
