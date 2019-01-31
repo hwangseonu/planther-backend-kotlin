@@ -17,7 +17,7 @@ class JwtProvider {
     @Value("\${jwt.refresh.exp}")
     var refreshExp: Long? = null
 
-    val secret: String by lazy { System.getenv("JWT_SECRET") }
+    val secret: String by lazy { System.getenv("JWT_SECRET") ?: "jwt_secret" }
 
     public fun generateToken(username: String, type: JwtType): String = Jwts.builder()
             .setSubject(type.toString())
