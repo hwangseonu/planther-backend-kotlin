@@ -24,7 +24,7 @@ class PlanController {
         val plan = planRepository.save(Plan(
                 request.title,
                 request.content,
-                PlanType.valueOf(request.type),
+                PlanType.valueOf(request.type.toUpperCase()),
                 request.year,
                 request.month,
                 request.day,
