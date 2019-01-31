@@ -8,10 +8,10 @@ import me.mocha.planther.users.response.SignInResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.util.StringUtils
+import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import javax.validation.Valid
 
 @RestController
@@ -39,5 +39,22 @@ class AuthController {
                 jwtProvider.generateToken(user.username, JwtType.REFRESH)))
     }
 
+    @GetMapping
+    fun refresh(@RequestHeader("Authorization") header: String?): ResponseEntity<Any> {
+        if (StringUtils.hasText(header) && header != null) {
+            val token = header.replaceFirst("Bearer", "").trim()
+            if (StringUtils.hasText(token) && jwtProvider.validToken(token, JwtType.REFRESH)) {
+                val username = jwtProvider.getUsernameFromToken(token)
+                if (userRepository.existsById(username)) {
+                    val response = SignInResponse(jwtProvider.generateToken(username, JwtType.ACCESS), null)
+                    if (ChronoUnit.DAYS.between(LocalDate.now(), jwtProvider.getTokenExp(token)) <= 7) {
+                        response.refresh = jwtProvider.generateToken(username, JwtType.REFRESH)
+                    }
+                    return ResponseEntity.ok(response)
+                }
+            }
+        }
+        return ResponseEntity.badRequest().body(null)
+    }
 
 }
