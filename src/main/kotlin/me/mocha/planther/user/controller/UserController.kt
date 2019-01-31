@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/users")
@@ -19,7 +20,7 @@ class UserController {
     lateinit var userRepository: UserRepository
 
     @PostMapping
-    fun signUp(@RequestBody req: SignUpRequest): ResponseEntity<Any> {
+    fun signUp(@Valid @RequestBody req: SignUpRequest): ResponseEntity<Any> {
         if (userRepository.existsById(req.username) || userRepository.existsByGradeAndClsAndNumber(req.grade, req.cls, req.number)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null)
         }
