@@ -4,7 +4,7 @@ Content-Type: application/json
 {
   "username": "test",
   "password": "test1234",
-  "name": "테스asda트",
+  "name": "테스트",
   "grade": 1,
   "cls": 1,
   "number": 1

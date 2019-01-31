@@ -1,7 +1,10 @@
 package me.mocha.planther.common.security.jwt
 
 import me.mocha.planther.common.model.repository.UserRepository
+import me.mocha.planther.common.security.user.UserDetailsServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
@@ -18,6 +21,9 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Autowired
+    lateinit var userDetailsService: UserDetailsServiceImpl
+
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
             val token = getTokenFromRequestHeader(request)
@@ -28,10 +34,19 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                         response.sendError(400, "존재하지 않는 사용자입니다.")
                         return
                     }
-                    TODO("implement more") //TODO implement more
+                    val userDetails = userDetailsService.loadUserByUsername(username);
+                    val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+                    SecurityContextHolder.getContext().authentication = authentication
+                } else {
+                    response.sendError(422, "unprocessable token")
+                    return
                 }
             }
+        } catch (e: Exception) {
+            response.sendError(500, e.message)
+            return
         }
+        filterChain.doFilter(request, response)
     }
 
     fun getTokenFromRequestHeader(request: HttpServletRequest): String {
