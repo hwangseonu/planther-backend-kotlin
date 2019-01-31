@@ -7,13 +7,14 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import io.jsonwebtoken.JwtException
+import org.springframework.stereotype.Component
 
-
+@Component
 class JwtProvider {
     @Value("\${jwt.access.exp}")
     var accessExp: Long? = null
 
-    @Value("\${jwt.refresh.exp")
+    @Value("\${jwt.refresh.exp}")
     var refreshExp: Long? = null
 
     val secret: String by lazy { System.getenv("JWT_SECRET") }
