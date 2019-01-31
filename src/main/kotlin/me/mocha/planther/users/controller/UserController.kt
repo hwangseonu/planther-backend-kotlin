@@ -1,8 +1,8 @@
-package me.mocha.planther.user.controller
+package me.mocha.planther.users.controller
 
 import me.mocha.planther.common.model.entity.User
 import me.mocha.planther.common.model.repository.UserRepository
-import me.mocha.planther.user.request.SignUpRequest
+import me.mocha.planther.users.request.SignUpRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

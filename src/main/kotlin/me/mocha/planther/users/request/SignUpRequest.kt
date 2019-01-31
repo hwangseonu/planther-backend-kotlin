@@ -1,4 +1,4 @@
-package me.mocha.planther.user.request
+package me.mocha.planther.users.request
 
 import org.hibernate.validator.constraints.Range
 import javax.validation.constraints.NotBlank
