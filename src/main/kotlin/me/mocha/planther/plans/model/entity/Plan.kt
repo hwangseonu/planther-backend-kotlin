@@ -4,7 +4,7 @@ import me.mocha.planther.common.model.entity.User
 import java.time.LocalDate
 import javax.persistence.*
 
-enum class Type(private val type: String) {
+enum class PlanType(private val type: String) {
     ASSIGNMENT("assignment"),
     PRESENTATION("presentation"),
     EVENT("event");
@@ -14,10 +14,6 @@ enum class Type(private val type: String) {
 
 @Entity
 data class Plan(
-        @Id
-        @Column(nullable = false)
-        val id: Long,
-
         @Column(nullable = false)
         val title: String,
 
@@ -26,7 +22,7 @@ data class Plan(
 
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
-        val type: Type,
+        val type: PlanType,
 
         @Column(nullable = false)
         val year: Int,
@@ -43,5 +39,10 @@ data class Plan(
         @Column(nullable = false)
         val classId: String
 ) {
+    @Id
+    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: Long? = null
+
     fun getDate() = LocalDate.of(year, month, day)
 }
