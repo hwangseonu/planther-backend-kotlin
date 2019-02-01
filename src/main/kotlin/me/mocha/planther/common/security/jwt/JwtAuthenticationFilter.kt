@@ -31,14 +31,14 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                 if (jwtProvider.validToken(token, JwtType.ACCESS)) {
                     val username = jwtProvider.getUsernameFromToken(token)
                     if (!userRepository.existsById(username)) {
-                        response.sendError(400, "존재하지 않는 사용자입니다.")
+                        response.sendError(400)
                         return
                     }
                     val userDetails = userDetailsService.loadUserByUsername(username);
                     val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
                     SecurityContextHolder.getContext().authentication = authentication
                 } else {
-                    response.sendError(422, "unprocessable token")
+                    response.sendError(422)
                     return
                 }
             }
